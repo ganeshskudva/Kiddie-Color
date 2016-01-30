@@ -16,6 +16,7 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.gkudva.kidscolor.Util.ColorMap;
+import com.gkudva.kidscolor.Util.SettingsMenu;
 
 import java.util.Random;
 
@@ -34,6 +35,7 @@ public class KiddieActivity extends AppCompatActivity {
     private static final String MY_PREFS = "myPreferences";
     private static final String ORIENTATION_CHANGED = "orientationChanged";
     private String fromOrientation;
+    private SettingsMenu settingsMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +48,7 @@ public class KiddieActivity extends AppCompatActivity {
         fromOrientation = myPrefLogin.getString(ORIENTATION_CHANGED, "false");
 
         viewFlipper = (ViewFlipper) findViewById(R.id.view_flipper);
-
+        settingsMenu = new SettingsMenu(this);
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setIcon(R.mipmap.ic_launcher);
@@ -55,7 +57,7 @@ public class KiddieActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Swipe Left or Right to begin", Toast.LENGTH_SHORT).show();
         }
         randomGenerator = new Random();
-        ColorMap.initializeColorMap();
+        ColorMap.initializeColorMap(false/*Non Advanced Mode*/);
         mGestureDetector = new GestureDetector(this,
                 new GestureDetector.SimpleOnGestureListener() {
                     private static final int SWIPE_THRESHOLD = 100;
@@ -96,7 +98,7 @@ public class KiddieActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
@@ -111,7 +113,10 @@ public class KiddieActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
+        if (R.id.action_settings == id)
+        {
+            settingsMenu.dialog.show();
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -124,7 +129,9 @@ public class KiddieActivity extends AppCompatActivity {
         viewFlipper.setInAnimation(inFromRightAnimation());
         viewFlipper.setOutAnimation(outToLeftAnimation());
 
+        int randInt = randomGenerator.nextInt(ColorMap.getColorMapSize());
         int randomInt = randomGenerator.nextInt(ColorMap.getColorMapSize());
+        randomInt = (randInt + randomInt)%(ColorMap.getColorMapSize());
 
 
         if (left == false) {
