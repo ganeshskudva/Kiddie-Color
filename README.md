@@ -2,7 +2,7 @@
 ## Learn colors by playing
 
 ###Walkthrough
-![Kiddie-Color](KiddieColor.gif)
+![Kiddie-Color](KidddieColor.gif)
 
 ###**Features:**
 1. Kiddie Color is a simple app aimed at kids/tots aged between 1-3 years.
